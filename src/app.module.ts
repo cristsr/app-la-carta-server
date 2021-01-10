@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { DatabaseModule } from '@database/database.module';
 import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { CONFIG } from '@config/config-keys';
 
 @Module({
   imports: [
@@ -15,12 +16,15 @@ import { AuthModule } from '@modules/auth/auth.module';
   ],
   providers: [
     {
-      /**
-       * by default each controller uses this guard
-       */
+      //by default each controller uses this guard
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  static port: number; // app port
+  constructor(private config: ConfigService) {
+    AppModule.port = +config.get(CONFIG.APP_MODULE);
+  }
+}

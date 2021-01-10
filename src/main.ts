@@ -24,7 +24,7 @@ function listRoutes(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  await app.listen(AppModule.port || 3000);
   listRoutes(app);
 }
 bootstrap();
