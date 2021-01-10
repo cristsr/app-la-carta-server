@@ -37,46 +37,29 @@ describe('AuthController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('/register 200', () => {
-    expect(
-      controller.register({
-        image: 'test',
-        email: 'test',
-        password: 'test',
-        name: 'test',
-      }),
-    ).toEqual(
-      Promise.resolve({
-        image: 'test',
-        email: 'test',
-        password: 'test',
-        name: 'test',
-      } as User),
-    );
-  });
-
-  it('/register 200 success', () => {
-    expect(
-      controller.register({
-        image: 'test',
-        email: 'test',
-        password: 'test',
-        name: 'test',
-      }),
-    ).toEqual(
-      Promise.resolve({
-        image: 'test',
-        email: 'test',
-        password: 'test',
-        name: 'test',
-      } as User),
-    );
-  });
-
-  it('/register 400 bad request', async () => {
+  it('POST /register 200 success', async () => {
     jest
       .spyOn(authService, 'register')
-      .mockImplementation(() => Promise.reject(new BadRequestException()));
+      .mockImplementation(() => Promise.resolve({ success: true }));
+
+    const result = await controller.register({
+      image: 'test',
+      email: 'test',
+      password: 'test',
+      name: 'test',
+    });
+
+    expect(result).toMatchObject({ success: true });
+  });
+
+  it('POST /register 400 bad request', async () => {
+    jest
+      .spyOn(authService, 'register')
+      .mockImplementation(() =>
+        Promise.reject(
+          new BadRequestException('The email given already exist'),
+        ),
+      );
 
     const response = await controller
       .register({
@@ -89,12 +72,53 @@ describe('AuthController', () => {
 
     expect(response).toBeInstanceOf(BadRequestException);
     expect(response).toMatchObject({
-      message: 'Bad Request',
+      message: 'The email given already exist',
       response: {
         statusCode: 400,
-        message: 'Bad Request',
+        message: 'The email given already exist',
       },
       status: 400,
+    });
+  });
+
+  it('POST /login 200 success', async () => {
+    jest.spyOn(authService, 'login').mockImplementation(() =>
+      Promise.resolve({
+        access_token: 'token test',
+        user: {
+          name: 'test',
+          image: 'test',
+          email: 'test',
+        },
+      }),
+    );
+
+    const result = await controller.login({
+      username: 'test',
+      password: 'test',
+    });
+
+    expect(result).toMatchObject({
+      access_token: 'token test',
+      user: {
+        name: 'test',
+        image: 'test',
+        email: 'test',
+      },
+    });
+  });
+
+  it('GET /profile 200 success', async () => {
+    const result = await controller.getProfile({
+      user: {
+        email: 'test@test',
+        username: 'test',
+      },
+    });
+
+    expect(result).toMatchObject({
+      email: 'test@test',
+      username: 'test',
     });
   });
 

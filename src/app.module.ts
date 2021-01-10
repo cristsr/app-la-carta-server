@@ -15,6 +15,9 @@ import { AuthModule } from '@modules/auth/auth.module';
   ],
   providers: [
     {
+      /**
+       * by default each controller uses this guard
+       */
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },

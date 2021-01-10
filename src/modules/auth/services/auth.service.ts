@@ -20,6 +20,7 @@ export class AuthService {
 
   /**
    * validate if user exist and given password is correct
+   * called by passport local strategy
    * @param username
    * @param pass
    */
@@ -71,6 +72,10 @@ export class AuthService {
       +this.config.get(CONFIG.BCRYPT_SALT_OR_ROUNDS),
     );
 
-    return this.userService.create(user);
+    await this.userService.create(user);
+
+    return {
+      success: true,
+    };
   }
 }
