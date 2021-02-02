@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { DatabaseModule } from '@database/database.module';
 import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { TableModule } from '@modules/tables/table.module';
 import { CONFIG } from '@config/config-keys';
 
 @Module({
@@ -13,6 +14,7 @@ import { CONFIG } from '@config/config-keys';
     DatabaseModule,
     AuthModule,
     UserModule,
+    TableModule,
   ],
   providers: [
     {
@@ -25,6 +27,6 @@ import { CONFIG } from '@config/config-keys';
 export class AppModule {
   static port: number; // app port
   constructor(private config: ConfigService) {
-    AppModule.port = +config.get(CONFIG.APP_MODULE);
+    AppModule.port = +config.get(CONFIG.APP_PORT);
   }
 }

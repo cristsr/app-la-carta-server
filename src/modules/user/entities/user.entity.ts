@@ -1,10 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User {
+  // @Prop({ required: false, type: Types.ObjectId })
+  _id: string;
+
   @Prop({ required: true })
   name: string;
 
@@ -14,7 +18,7 @@ export class User {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true, expose: false, select: false })
+  @Prop({ required: true })
   password: string;
 }
 

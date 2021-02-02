@@ -1,0 +1,38 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { CreateTableDto } from '@modules/tables/dto/create-table.dto';
+import { UpdateTableDto } from '@modules/tables/dto/update-table.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Table, TableDocument } from '@modules/tables/entities/table.entity';
+import { Model } from 'mongoose';
+
+@Injectable()
+export class TableService {
+  constructor(
+    @InjectModel(Table.name)
+    private tableModel: Model<TableDocument>,
+  ) {}
+
+  create(createTableDto: CreateTableDto): Promise<Table> {
+    Logger.log(createTableDto);
+    return this.tableModel.create(createTableDto);
+  }
+
+  findAll(userId: string): Promise<Table[]> {
+    return this.tableModel.find({ userId }).exec();
+  }
+
+  findOne(id: string): Promise<Table> {
+    return this.tableModel.findById(id).exec();
+  }
+
+  update(id: string, updateTableDto: UpdateTableDto): Promise<Table> {
+    return this.tableModel.findByIdAndUpdate(id, updateTableDto).exec();
+  }
+
+  remove(id: string): Promise<boolean> {
+    return this.tableModel
+      .findByIdAndDelete(id)
+      .exec()
+      .then((doc) => !!doc);
+  }
+}

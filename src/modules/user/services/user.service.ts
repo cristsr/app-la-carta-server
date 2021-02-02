@@ -20,7 +20,7 @@ export class UserService {
     return this.userModel.find().exec();
   }
 
-  findOne(id: number): Promise<User> {
+  findOne(id: string): Promise<User> {
     return this.userModel.findById(id).exec();
   }
 
@@ -28,11 +28,11 @@ export class UserService {
     return this.userModel.findOne({ email }).exec();
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     return this.userModel.findByIdAndUpdate(id, updateUserDto).exec();
   }
 
-  remove(id: number): Promise<User> {
+  remove(id: string): Promise<User> {
     return this.userModel.findByIdAndDelete(id).exec();
   }
 }

@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -31,13 +33,16 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    const isMatch = await bcrypt.compare(pass, user.password);
+    const isMatch = await bcrypt.compare(pass, user.password).catch((err) => {
+      throw new InternalServerErrorException(err.message);
+    });
 
     if (!isMatch) {
       throw new BadRequestException('Incorrect password');
     }
 
     return {
+      _id: user._id,
       name: user.name,
       image: user.image,
       email: user.email,
@@ -49,7 +54,11 @@ export class AuthService {
    * @param user model created in jwt strategy
    */
   async login(user: any) {
-    const payload = { username: user.name, email: user.email };
+    const payload = {
+      _id: user._id,
+      username: user.name,
+      email: user.email,
+    };
     return {
       access_token: this.jwtService.sign(payload),
       user,
