@@ -5,8 +5,8 @@ import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
 import { DatabaseModule } from '@database/database.module';
 import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
-import { TableModule } from '@modules/tables/table.module';
 import { CONFIG } from '@config/config-keys';
+import { TableModule } from '@modules/table/table.module';
 
 @Module({
   imports: [
