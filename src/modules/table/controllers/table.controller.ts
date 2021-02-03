@@ -9,9 +9,9 @@ import {
   Req,
   Logger,
 } from '@nestjs/common';
-import { TableService } from '@modules/tables/services/table.service';
-import { CreateTableDto } from '@modules/tables/dto/create-table.dto';
-import { UpdateTableDto } from '@modules/tables/dto/update-table.dto';
+import { TableService } from '@modules/table/services/table.service';
+import { CreateTableDto } from '@modules/table/dto/create-table.dto';
+import { UpdateTableDto } from '@modules/table/dto/update-table.dto';
 
 @Controller('table')
 export class TableController {

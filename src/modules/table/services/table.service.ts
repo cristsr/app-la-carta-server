@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateTableDto } from '@modules/tables/dto/create-table.dto';
-import { UpdateTableDto } from '@modules/tables/dto/update-table.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Table, TableDocument } from '@modules/tables/entities/table.entity';
 import { Model } from 'mongoose';
+import { Table, TableDocument } from '@modules/table/entities/table.entity';
+import { CreateTableDto } from '@modules/table/dto/create-table.dto';
+import { UpdateTableDto } from '@modules/table/dto/update-table.dto';
 
 @Injectable()
 export class TableService {
