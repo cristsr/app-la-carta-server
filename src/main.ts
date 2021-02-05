@@ -25,7 +25,7 @@ function listRoutes(app: INestApplication) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  await app.listen(AppModule.port || 3000);
+  await app.listen(AppModule.port);
   listRoutes(app);
 }
 bootstrap();

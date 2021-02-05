@@ -27,6 +27,6 @@ import { TableModule } from '@modules/table/table.module';
 export class AppModule {
   static port: number; // app port
   constructor(private config: ConfigService) {
-    AppModule.port = +config.get(CONFIG.APP_PORT);
+    AppModule.port = +config.get(CONFIG.PORT) || 3000;
   }
 }
