@@ -30,7 +30,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(username);
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     const isMatch = await bcrypt.compare(pass, user.password).catch((err) => {
@@ -38,7 +38,7 @@ export class AuthService {
     });
 
     if (!isMatch) {
-      throw new BadRequestException('Incorrect password');
+      throw new BadRequestException('Contraseña incorrecta');
     }
 
     return {
@@ -73,7 +73,9 @@ export class AuthService {
     const isUser = await this.userService.findByEmail(user.email);
 
     if (isUser) {
-      throw new BadRequestException('The email given already exist');
+      throw new BadRequestException(
+        'El correo electronico ya se encuentra registrado',
+      );
     }
 
     user.password = await bcrypt.hash(
