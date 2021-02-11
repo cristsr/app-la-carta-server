@@ -11,10 +11,12 @@
     "outDir": "./app/dist",
     "baseUrl": "./",
     "incremental": true,
+    "resolveJsonModule": true,
     "paths": {
       "@modules/*": ["src/modules/*"],
       "@database/*": ["src/database/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "assets/*": ["src/assets/*"]
     }
   }
 }

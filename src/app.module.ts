@@ -7,6 +7,7 @@ import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { CONFIG } from '@config/config-keys';
 import { TableModule } from '@modules/table/table.module';
+import { OrdersModule } from '@modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TableModule } from '@modules/table/table.module';
     AuthModule,
     UserModule,
     TableModule,
+    OrdersModule,
   ],
   providers: [
     {
