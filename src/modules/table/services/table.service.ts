@@ -26,7 +26,9 @@ export class TableService {
   }
 
   update(id: string, updateTableDto: UpdateTableDto): Promise<Table> {
-    return this.tableModel.findByIdAndUpdate(id, updateTableDto).exec();
+    return this.tableModel
+      .findByIdAndUpdate(id, updateTableDto, { new: true })
+      .exec();
   }
 
   remove(id: string): Promise<boolean> {

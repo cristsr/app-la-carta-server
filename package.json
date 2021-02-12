@@ -9,7 +9,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf app",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
