@@ -1,14 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateOrderDto } from '@modules/orders/dto/create-order.dto';
 import { UpdateOrderDto } from '@modules/orders/dto/update-order.dto';
-import { FcmService } from '@modules/orders/services/fcm/fcm.service';
+import { Order, OrderDocument } from '@modules/orders/entities/order.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class OrdersService {
-  constructor(private fcm: FcmService) {}
+  constructor(
+    @InjectModel(Order.name)
+    private orderModel: Model<OrderDocument>,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
-  create(createOrderDto: CreateOrderDto) {
-    return this.fcm.sendMessage();
+  async create(createOrderDto: CreateOrderDto) {
+    // const order = await this.orderModel.create(createOrderDto);
+    this.eventEmitter.emit('order.created', createOrderDto);
+
+    return createOrderDto;
   }
 
   findAll() {

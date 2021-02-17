@@ -4,7 +4,15 @@ export class CreateOrderDto {
   orders: [
     {
       id: string;
-      name: string;
+      price: number;
+      dishes: [
+        {
+          id: string;
+          name: string;
+          price: number;
+          quantity: number;
+        },
+      ];
     },
   ];
 }

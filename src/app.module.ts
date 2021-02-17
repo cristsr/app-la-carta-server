@@ -8,10 +8,12 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { CONFIG } from '@config/config-keys';
 import { TableModule } from '@modules/table/table.module';
 import { OrdersModule } from '@modules/orders/orders.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    EventEmitterModule.forRoot(),
     DatabaseModule,
     AuthModule,
     UserModule,

@@ -1,14 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { User } from '@modules/user/entities/user.entity';
 
 export type OrderDocument = Order & Document;
 
 @Schema()
 export class Order {
-  _id: string;
-
-  @Prop()
-  image: string;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
+  userId: string;
 
   @Prop({ required: true })
   email: string;
@@ -18,3 +17,7 @@ export class Order {
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+OrderSchema.virtual('id').get(function () {
+  return this._id;
+});
