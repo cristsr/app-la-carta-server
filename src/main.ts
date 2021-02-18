@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { WsAdapter } from '@nestjs/platform-ws';
 
 function listRoutes(app: INestApplication) {
@@ -25,9 +25,14 @@ function listRoutes(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new WsAdapter(app));
   app.enableCors();
+
   await app.listen(AppModule.port);
+
   listRoutes(app);
+  Logger.log(`App running at port ${AppModule.port}`, 'Bootstrap');
 }
 bootstrap();

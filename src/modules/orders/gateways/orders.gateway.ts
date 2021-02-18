@@ -19,7 +19,6 @@ export class OrdersGateway {
 
   @OnEvent('order.created', { async: true })
   handleOrderCreatedEvent(payload: any) {
-    console.log(payload);
     this.server.clients.forEach((client) => {
       client.send(JSON.stringify(payload));
     });

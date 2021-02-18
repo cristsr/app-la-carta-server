@@ -1,23 +1,42 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from '@modules/user/entities/user.entity';
+import { Table } from '@modules/table/entities/table.entity';
 
 export type OrderDocument = Order & Document;
 
 @Schema()
 export class Order {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
+  @Prop({
+    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: User.name,
+  })
   userId: string;
 
+  @Prop({
+    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: Table.name,
+  })
+  tableId: string;
+
+  @Prop({
+    required: false,
+    ref: 'Category',
+  })
   @Prop({ required: true })
-  email: string;
+  order: {
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
 
   @Prop({ required: true })
-  password: string;
+  totalPrice: number;
+
+  @Prop({ required: false, default: false })
+  isCompleted?: boolean;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
-
-OrderSchema.virtual('id').get(function () {
-  return this._id;
-});

@@ -15,10 +15,39 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    // const order = await this.orderModel.create(createOrderDto);
-    this.eventEmitter.emit('order.created', createOrderDto);
+    // console.log(createOrderDto);
 
-    return createOrderDto;
+    const totalPrice = createOrderDto.order
+      .map((order) => order.price * order.quantity)
+      .reduce((state: number, order: number) => state + order, 0);
+
+    const orderRecord: any = await this.orderModel
+      .create({
+        userId: createOrderDto.userId,
+        tableId: createOrderDto.tableId,
+        order: createOrderDto.order,
+        totalPrice,
+      })
+      .then((record) =>
+        record
+          .populate({
+            path: 'tableId',
+          })
+          .execPopulate(),
+      );
+
+    const orderRespose = {
+      id: orderRecord.id,
+      table: orderRecord.tableId.name,
+      order: orderRecord.order,
+      totalPrice,
+    };
+
+    console.log(orderRespose);
+
+    this.eventEmitter.emit('order.created', orderRespose);
+
+    return orderRespose;
   }
 
   findAll() {

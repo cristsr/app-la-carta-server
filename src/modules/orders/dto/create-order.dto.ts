@@ -1,18 +1,39 @@
+import {
+  IsDefined,
+  IsArray,
+  IsNumber,
+  IsString,
+  ValidateNested,
+  ArrayMinSize,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+class Order {
+  @IsDefined()
+  @IsString()
+  name: string;
+
+  @IsDefined()
+  @IsNumber()
+  price: number;
+
+  @IsDefined()
+  @IsNumber()
+  quantity: number;
+}
+
 export class CreateOrderDto {
+  @IsDefined()
+  @IsString()
   userId: string;
+
+  @IsDefined()
+  @IsString()
   tableId: string;
-  orders: [
-    {
-      id: string;
-      price: number;
-      dishes: [
-        {
-          id: string;
-          name: string;
-          price: number;
-          quantity: number;
-        },
-      ];
-    },
-  ];
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => Order)
+  order: Order[];
 }
