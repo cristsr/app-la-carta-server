@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateOrderDto } from '@modules/orders/dto/create-order.dto';
 import { UpdateOrderDto } from '@modules/orders/dto/update-order.dto';
@@ -15,8 +15,6 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    // console.log(createOrderDto);
-
     const totalPrice = createOrderDto.order
       .map((order) => order.price * order.quantity)
       .reduce((state: number, order: number) => state + order, 0);
@@ -40,12 +38,12 @@ export class OrdersService {
       id: orderRecord.id,
       table: orderRecord.tableId.name,
       order: orderRecord.order,
+      isCompleted: orderRecord.isCompleted,
       totalPrice,
     };
 
-    console.log(orderRespose);
-
     this.eventEmitter.emit('order.created', orderRespose);
+    Logger.log(orderRespose, 'OrdersService.create');
 
     return orderRespose;
   }
