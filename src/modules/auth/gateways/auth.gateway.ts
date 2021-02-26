@@ -9,6 +9,10 @@ export class AuthGateway {
    * @param server
    */
   async afterInit(server: Ws.Server) {
-    server.on('connection', (socket, request) => (socket['request'] = request));
+    console.log('called aferInit');
+    server.on(
+      'connection',
+      (socket, request) => (socket['headers'] = request.headers),
+    );
   }
 }
