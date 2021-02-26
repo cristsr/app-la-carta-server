@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthController } from '@modules/auth/controllers/auth.controller';
 import { AuthService } from '@modules/auth/services/auth.service';
@@ -8,6 +8,8 @@ import { JwtStrategy } from '@modules/auth/strategies/jwt.strategy';
 import { CONFIG } from '@config/config-keys';
 import { UserModule } from '@modules/user/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { WsJwtAuthGuard } from '@modules/auth/guards/ws-jwt-auth.guard';
+import { AuthGateway } from './gateways/auth.gateway';
 
 @Module({
   imports: [
@@ -23,7 +25,13 @@ import { PassportModule } from '@nestjs/passport';
     }),
     UserModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    WsJwtAuthGuard,
+    AuthGateway,
+  ],
   exports: [AuthService],
   controllers: [AuthController],
 })

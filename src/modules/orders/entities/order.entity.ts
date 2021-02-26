@@ -22,10 +22,8 @@ export class Order {
   tableId: string;
 
   @Prop({
-    required: false,
-    ref: 'Category',
+    required: true,
   })
-  @Prop({ required: true })
   order: {
     name: string;
     price: number;

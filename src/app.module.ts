@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RestJwtAuthGuard } from '@modules/auth/guards/rest-jwt-auth.guard';
 import { DatabaseModule } from '@database/database.module';
 import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
@@ -24,7 +24,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     {
       //by default each controller uses this guard
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: RestJwtAuthGuard,
     },
   ],
 })

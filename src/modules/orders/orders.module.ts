@@ -4,6 +4,7 @@ import { OrdersService } from '@modules/orders/services/orders/orders.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Order, OrderSchema } from '@modules/orders/entities/order.entity';
 import { OrdersGateway } from '@modules/orders/gateways/orders.gateway';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
