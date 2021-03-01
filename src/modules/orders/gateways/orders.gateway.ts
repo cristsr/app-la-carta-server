@@ -2,7 +2,6 @@ import {
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -20,13 +19,13 @@ export class OrdersGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: any, ...args: any[]): any {}
 
   handleDisconnect(client: any): any {
-    Logger.log('Client Disconnected Connected', 'OrdersGateway');
+    client.send('asdsad');
+    Logger.log('Client Disconnected', 'OrdersGateway');
   }
 
   @UseGuards(WsJwtAuthGuard)
   @SubscribeMessage('newOrder')
-  handleMessage(@MessageBody() data: string, @Request() req): string {
-    console.log(req.headers);
+  handleMessage(@MessageBody() data: string): string {
     return 'Hello world!';
   }
 

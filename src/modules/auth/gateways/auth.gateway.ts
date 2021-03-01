@@ -1,18 +1,8 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import * as Ws from 'ws';
+import { OnGatewayConnection, WebSocketGateway } from '@nestjs/websockets';
 
 @WebSocketGateway()
-export class AuthGateway {
-  /**
-   * After each socket connection, connection property is
-   * added to socket, then request is visible in execution context
-   * @param server
-   */
-  async afterInit(server: Ws.Server) {
-    console.log('called aferInit');
-    server.on(
-      'connection',
-      (socket, request) => (socket['headers'] = request.headers),
-    );
+export class AuthGateway implements OnGatewayConnection {
+  handleConnection(client: any, req: any): any {
+    client.headers = req.headers;
   }
 }

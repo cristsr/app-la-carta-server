@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { RestJwtAuthGuard } from '@modules/auth/guards/rest-jwt-auth.guard';
 import { DatabaseModule } from '@database/database.module';
 import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
@@ -20,13 +18,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TableModule,
     OrdersModule,
   ],
-  providers: [
-    {
-      //by default each controller uses this guard
-      provide: APP_GUARD,
-      useClass: RestJwtAuthGuard,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {
   static port: number; // app port

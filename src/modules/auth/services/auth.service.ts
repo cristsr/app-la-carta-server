@@ -10,6 +10,7 @@ import { UserService } from '@modules/user/services/user.service';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { CONFIG } from '@config/config-keys';
+import { JwtResponseDto } from '@modules/auth/dto/jwt-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -58,9 +59,19 @@ export class AuthService {
       username: user.name,
       email: user.email,
     };
+
+    const jwtResponse: JwtResponseDto = {
+      accessToken: this.jwtService.sign(payload),
+      tokenType: 'Bearer',
+      expiresIn: this.config.get(CONFIG.JWT_EXPIRATION_TIME),
+      refreshToken: this.jwtService.sign(payload, {
+        secret: this.config.get(CONFIG.REFRESH_SECRET_KEY),
+      }),
+    };
+
     return {
-      access_token: this.jwtService.sign(payload),
-      user,
+      credentials: jwtResponse,
+      user: payload,
     };
   }
 
@@ -87,5 +98,21 @@ export class AuthService {
     return {
       success: true,
     };
+  }
+
+  async refresh(user: any) {
+    const payload = {
+      _id: user._id,
+      username: user.name,
+      email: user.email,
+    };
+
+    const jwtResponse: JwtResponseDto = {
+      accessToken: this.jwtService.sign(payload),
+      tokenType: 'Bearer',
+      expiresIn: this.config.get(CONFIG.JWT_EXPIRATION_TIME),
+    };
+
+    return jwtResponse;
   }
 }

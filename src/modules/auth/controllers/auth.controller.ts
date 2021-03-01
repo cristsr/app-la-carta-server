@@ -34,4 +34,9 @@ export class AuthController {
     Logger.debug(req.user);
     return req.user;
   }
+
+  @Get('refresh')
+  refreshToken(@Request() request) {
+    return this.authService.refresh(request.user);
+  }
 }
