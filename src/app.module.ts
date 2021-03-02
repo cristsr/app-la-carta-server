@@ -7,6 +7,7 @@ import { CONFIG } from '@config/config-keys';
 import { TableModule } from '@modules/table/table.module';
 import { OrdersModule } from '@modules/orders/orders.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserModule,
     TableModule,
     OrdersModule,
+    MailModule,
   ],
   providers: [],
 })

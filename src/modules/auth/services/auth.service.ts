@@ -11,6 +11,8 @@ import { CreateUserDto } from '@modules/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { CONFIG } from '@config/config-keys';
 import { JwtResponseDto } from '@modules/auth/dto/jwt-response.dto';
+import { randomBytes } from 'crypto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,7 @@ export class AuthService {
     private config: ConfigService,
     private userService: UserService,
     private jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   /**
@@ -80,20 +83,35 @@ export class AuthService {
    * @param user
    */
   async register(user: CreateUserDto) {
-    const isUser = await this.userService.findByEmail(user.email);
+    // if (await this.userService.findByEmail(user.email)) {
+    //   throw new BadRequestException(
+    //     'El correo electronico ya se encuentra registrado',
+    //   );
+    // }
 
-    if (isUser) {
-      throw new BadRequestException(
-        'El correo electronico ya se encuentra registrado',
-      );
-    }
+    const defaultPassword = randomBytes(6).toString('hex');
 
     user.password = await bcrypt.hash(
-      user.password,
+      defaultPassword,
       +this.config.get(CONFIG.BCRYPT_SALT_OR_ROUNDS),
     );
 
-    await this.userService.create(user);
+    // await this.userService.create(user);
+
+    try {
+      await this.mailerService.sendMail({
+        to: user.email, // list of receivers
+        from: 'hoffman@applacarta.com',
+        subject: 'Testing Nest MailerModule ✔', // Subject line
+        text: 'welcome',
+        // html: '<b>welcome</b>', // HTML body content
+      });
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException(
+        'No se pudo enviar el correo al usuario registrado',
+      );
+    }
 
     return {
       success: true,
