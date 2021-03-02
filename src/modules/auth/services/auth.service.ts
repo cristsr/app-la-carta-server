@@ -96,15 +96,13 @@ export class AuthService {
       +this.config.get(CONFIG.BCRYPT_SALT_OR_ROUNDS),
     );
 
-    // await this.userService.create(user);
-
     try {
       await this.mailerService.sendMail({
         to: user.email, // list of receivers
-        from: 'hoffman@applacarta.com',
-        subject: 'Testing Nest MailerModule ✔', // Subject line
-        text: 'welcome',
-        // html: '<b>welcome</b>', // HTML body content
+        from: 'test@applacarta.com',
+        subject: 'Registration successfully ✔', // Subject line
+        // text: 'welcome',
+        html: '<b>welcome</b>', // HTML body content
       });
     } catch (e) {
       console.log(e);
