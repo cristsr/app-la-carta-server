@@ -8,8 +8,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
         from: '"No Reply" <noreply@example.com>',
       },
       transport: {
+        host: 'smtp.googlemail.com',
+        port: 465,
         auth: {
-          user: 'username',
+          user: '',
           pass: 'pass',
         },
       },
