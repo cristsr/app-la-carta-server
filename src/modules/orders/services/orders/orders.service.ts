@@ -1,4 +1,8 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateOrderDto } from '@modules/orders/dto/create-order.dto';
 import { UpdateOrderDto } from '@modules/orders/dto/update-order.dto';
@@ -45,6 +49,8 @@ export class OrdersService {
       isCompleted: orderRecord.isCompleted,
       totalPrice,
     };
+
+    Logger.log(orderResponse, 'Order created');
 
     this.eventEmitter.emit('order.created', orderResponse, orderRecord.userId);
     return orderResponse;

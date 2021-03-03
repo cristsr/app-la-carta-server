@@ -29,7 +29,7 @@ export class UserGateway implements OnGatewayDisconnect {
     this.sockets.register(userId, client);
   }
 
-  @OnEvent('order.created', { async: false })
+  @OnEvent('order.created', { async: true })
   handleOrderCreatedEvent(payload: ResponseOrderDto, userId: string) {
     try {
       this.sockets.getClient(userId).send(
