@@ -20,7 +20,6 @@ import { MailModule } from './mail/mail.module';
     OrdersModule,
     MailModule,
   ],
-  providers: [],
 })
 export class AppModule {
   static port: number; // app port

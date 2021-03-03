@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class Order {
+export class Order {
   @IsDefined()
   @IsString()
   name: string;
