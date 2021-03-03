@@ -1,6 +1,7 @@
 import {
   Injectable,
   Logger,
+  Request,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -56,8 +57,10 @@ export class OrdersService {
     return orderResponse;
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  findAll(userId: string) {
+    return this.orderModel.find({
+      userId,
+    });
   }
 
   findOne(id: number) {

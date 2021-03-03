@@ -6,6 +6,7 @@ import {
   Put,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { Public } from '@modules/auth/decorators/public';
 import { OrdersService } from '@modules/orders/services/orders/orders.service';
@@ -23,8 +24,8 @@ export class OrdersController {
   }
 
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  findAll(@Request() req) {
+    return this.ordersService.findAll(req.user._id);
   }
 
   @Get(':id')
