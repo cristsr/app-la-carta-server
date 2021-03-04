@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param payload
    */
   async validate(payload: any) {
-    Logger.log(payload);
+    Logger.log(`User ${payload._id} is authorized`);
     return {
       email: payload.email,
       username: payload.username,

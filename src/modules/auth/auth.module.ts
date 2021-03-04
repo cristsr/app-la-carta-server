@@ -8,8 +8,6 @@ import { JwtStrategy } from '@modules/auth/strategies/jwt.strategy';
 import { CONFIG } from '@config/config-keys';
 import { UserModule } from '@modules/user/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { WsJwtAuthGuard } from '@modules/auth/guards/ws-jwt-auth.guard';
-import { AuthGateway } from './gateways/auth.gateway';
 import { APP_GUARD } from '@nestjs/core';
 import { RestJwtAuthGuard } from '@modules/auth/guards/rest-jwt-auth.guard';
 
@@ -31,8 +29,6 @@ import { RestJwtAuthGuard } from '@modules/auth/guards/rest-jwt-auth.guard';
     AuthService,
     LocalStrategy,
     JwtStrategy,
-    WsJwtAuthGuard,
-    AuthGateway,
     {
       //by default each controller uses this guard
       provide: APP_GUARD,

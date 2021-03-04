@@ -32,12 +32,8 @@ export class OrdersService {
         order: createOrderDto.order,
         totalPrice,
       })
-      .then((record) =>
-        record
-          .populate({
-            path: 'tableId',
-          })
-          .execPopulate(),
+      .then((record: OrderDocument) =>
+        record.populate({ path: 'tableId' }).execPopulate(),
       )
       .catch((e) => {
         throw new UnprocessableEntityException(e.message);

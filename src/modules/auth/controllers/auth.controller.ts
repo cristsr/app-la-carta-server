@@ -12,6 +12,7 @@ import { AuthService } from '@modules/auth/services/auth.service';
 import { Public } from '@modules/auth/decorators/public';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { welcome } from '../../../mail/mails/mails';
 
 @Controller('auth')
 export class AuthController {
@@ -49,10 +50,10 @@ export class AuthController {
   async sendMail() {
     return this.mailerService.sendMail({
       to: 'styven21121@gmail.com', // list of receivers
-      from: 'noreply@nestjs.com', // sender address
+      from: 'noreply@asdasdsad.com', // sender address
       subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: 'welcome', // plaintext body
-      html: '<b>welcome</b>', // HTML body content
+      // text: 'welcome', // plaintext body
+      html: welcome({}), // HTML body content
     });
   }
 }
