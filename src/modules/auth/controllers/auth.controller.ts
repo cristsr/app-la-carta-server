@@ -11,7 +11,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '@modules/auth/services/auth.service';
 import { Public } from '@modules/auth/decorators/public';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
-import { userCreatedSuccessfully } from '../../../mail/templates/templates';
 
 @Controller('auth')
 export class AuthController {
