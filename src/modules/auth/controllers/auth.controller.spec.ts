@@ -11,6 +11,7 @@ import { UserModule } from '@modules/user/user.module';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { BadRequestException } from '@nestjs/common';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -23,6 +24,11 @@ describe('AuthController', () => {
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         ConfigModule,
         JwtModule.register({}),
+        MailerModule.forRoot({
+          transport: {
+            host: 'smtp.googlemail.com',
+          },
+        }),
         UserModule,
       ],
       controllers: [AuthController],
@@ -43,7 +49,6 @@ describe('AuthController', () => {
       .mockImplementation(() => Promise.resolve({ success: true }));
 
     const result = await controller.register({
-      image: 'test',
       email: 'test',
       password: 'test',
       name: 'test',
@@ -63,7 +68,6 @@ describe('AuthController', () => {
 
     const response = await controller
       .register({
-        image: 'test',
         email: 'fake',
         password: 'test',
         name: 'test',
@@ -84,11 +88,16 @@ describe('AuthController', () => {
   it('POST /login 200 success', async () => {
     jest.spyOn(authService, 'login').mockImplementation(() =>
       Promise.resolve({
-        access_token: 'token test',
+        credentials: {
+          accessToken: 'token test',
+          expiresIn: '3600s',
+          refreshToken: 'refresh_token',
+          tokenType: 'bearer',
+        },
         user: {
-          name: 'test',
-          image: 'test',
-          email: 'test',
+          _id: 'asdasd',
+          username: 'username',
+          email: 'email@emil.com',
         },
       }),
     );
@@ -99,13 +108,20 @@ describe('AuthController', () => {
     });
 
     expect(result).toMatchObject({
-      access_token: 'token test',
+      credentials: {
+        accessToken: 'token test',
+        expiresIn: '3600s',
+        refreshToken: 'refresh_token',
+        tokenType: 'bearer',
+      },
       user: {
-        name: 'test',
-        image: 'test',
-        email: 'test',
+        _id: 'asdasd',
+        username: 'username',
+        email: 'email@emil.com',
       },
     });
+
+    expect(result.credentials.accessToken).toEqual('token test');
   });
 
   it('GET /profile 200 success', async () => {

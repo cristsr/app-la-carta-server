@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Request,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { Public } from '@modules/auth/decorators/public';
 import { OrdersService } from '@modules/orders/services/orders/orders.service';
@@ -24,22 +26,26 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@Request() req) {
-    return this.ordersService.findAll(req.user._id);
-  }
+  findAll(
+    @Request() req,
+    @Query('isCompleted') isCompleted: boolean | undefined,
+  ) {
+    if (typeof isCompleted === 'undefined') {
+      throw new BadRequestException(
+        'El parametro de busqueda isCompleted es requerido.',
+      );
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+    return this.ordersService.findAll(req.user._id, isCompleted);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
+    return this.ordersService.update(id, updateOrderDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
+  remove(@Param('id') id: string): Promise<any> {
+    return this.ordersService.remove(id);
   }
 }

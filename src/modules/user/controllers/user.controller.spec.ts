@@ -44,7 +44,6 @@ describe('UserController', () => {
       controller.create({
         email: 'test',
         password: 'test',
-        image: 'test',
         name: 'test',
       }),
     ).toBeTruthy();

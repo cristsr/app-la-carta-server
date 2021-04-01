@@ -10,9 +10,6 @@ console.log(join(__dirname, 'templates'));
   imports: [
     MailerModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
-        defaults: {
-          from: '"No Reply" <noreply@asdasd.com>',
-        },
         transport: {
           host: 'smtp.googlemail.com',
           auth: {
@@ -20,19 +17,8 @@ console.log(join(__dirname, 'templates'));
             pass: config.get(CONFIG.GMAIL_PASSWORD),
           },
         },
-        template: {
-          dir: join(__dirname, 'templates'),
-
-          options: {
-            strict: true,
-          },
-        },
       }),
       inject: [ConfigService],
-
-      // defaults: {
-      //   from: '"nest-modules" <modules@nestjs.com>',
-      // },
     }),
   ],
 })

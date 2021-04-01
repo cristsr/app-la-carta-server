@@ -19,13 +19,15 @@ export class UserGateway implements OnGatewayDisconnect {
 
   constructor(private sockets: Sockets) {}
 
-  handleDisconnect(client: any): any {
-    Logger.log('Client Disconnected', 'OrdersGateway');
+  handleDisconnect(clientRef: any): any {
+    this.sockets.disconnect(clientRef.id);
+    Logger.log(`Client ${clientRef.id} Disconnected`, 'OrdersGateway');
   }
 
   @SubscribeMessage('join')
-  handleJoin(@MessageBody() userId: string, @ConnectedSocket() client) {
-    this.sockets.register(userId, client);
+  handleJoin(@MessageBody() userId: string, @ConnectedSocket() clientRef) {
+    clientRef.id = userId;
+    this.sockets.register(userId, clientRef);
     Logger.log(`User ${userId} is connected`, 'UserGateway');
   }
 

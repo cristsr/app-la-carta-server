@@ -11,15 +11,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '@modules/auth/services/auth.service';
 import { Public } from '@modules/auth/decorators/public';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
-import { MailerService } from '@nestjs-modules/mailer';
-import { welcome } from '../../../mail/mails/mails';
+import { userCreatedSuccessfully } from '../../../mail/templates/templates';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly mailerService: MailerService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('register')
@@ -43,17 +39,5 @@ export class AuthController {
   @Get('refresh')
   refreshToken(@Request() request) {
     return this.authService.refresh(request.user);
-  }
-
-  @Public()
-  @Get('sendMail')
-  async sendMail() {
-    return this.mailerService.sendMail({
-      to: 'styven21121@gmail.com', // list of receivers
-      from: 'noreply@asdasdsad.com', // sender address
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      // text: 'welcome', // plaintext body
-      html: welcome({}), // HTML body content
-    });
   }
 }

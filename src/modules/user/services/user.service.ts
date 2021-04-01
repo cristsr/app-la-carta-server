@@ -24,7 +24,7 @@ export class UserService {
     return this.userModel.findById(id).exec();
   }
 
-  findByEmail(email: string): Promise<User> {
+  findByEmail(email: string): Promise<UserDocument> {
     return this.userModel.findOne({ email }).exec();
   }
 

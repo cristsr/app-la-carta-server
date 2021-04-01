@@ -14,9 +14,3 @@ export class Table {
 }
 
 export const TableSchema = SchemaFactory.createForClass(Table);
-
-TableSchema.virtual('table', {
-  ref: 'Order', //Organization is in relation with User
-  localField: '_id', //field that Organization holds as proof of relation
-  foreignField: 'tableId', //field that User holds as proof of relation
-});

@@ -1,7 +1,7 @@
 import {
   Injectable,
   Logger,
-  Request,
+  NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -53,21 +53,39 @@ export class OrdersService {
     return orderResponse;
   }
 
-  findAll(userId: string) {
+  findAll(userId: string, isCompleted: boolean) {
     return this.orderModel.find({
       userId,
+      isCompleted,
+      isDeleted: false,
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  update(id: string, updateOrderDto: UpdateOrderDto) {
+    Logger.log(id, 'UPDATE ORDER');
+    return this.orderModel
+      .findByIdAndUpdate(id, updateOrderDto)
+      .exec()
+      .then((record) => {
+        if (!record) throw new NotFoundException();
+        return {
+          success: true,
+        };
+      });
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  remove(id: string): Promise<any> {
+    Logger.log(id, 'DELETE ORDER');
+    return this.orderModel
+      .findByIdAndUpdate(id, {
+        isDeleted: true,
+      })
+      .exec()
+      .then((record) => {
+        if (!record) throw new NotFoundException();
+        return {
+          success: true,
+        };
+      });
   }
 }

@@ -35,6 +35,9 @@ export class Order {
 
   @Prop({ required: false, default: false })
   isCompleted?: boolean;
+
+  @Prop({ default: false, select: false })
+  isDeleted: boolean;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

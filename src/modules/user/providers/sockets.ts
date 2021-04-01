@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
-interface User {
-  [key: string]: any;
-}
-
 @Injectable()
 export class Sockets {
-  private users: User = {};
+  private users = new Map<string, any>();
 
-  register(userId: string, client) {
-    this.users[userId] = client;
+  register(userId: string, client): void {
+    this.users.set(userId, client);
   }
 
   getClient(userId: string): any {
-    if (!this.users[userId]) {
+    if (!this.users.has(userId)) {
       throw new WsException('User not found');
     }
-    return this.users[userId];
+    return this.users.get(userId);
+  }
+
+  disconnect(userId): void {
+    this.users.delete(userId);
   }
 }

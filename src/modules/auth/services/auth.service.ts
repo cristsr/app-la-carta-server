@@ -20,7 +20,7 @@ export class AuthService {
     private config: ConfigService,
     private userService: UserService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
+    private mailerService: MailerService,
   ) {}
 
   /**
