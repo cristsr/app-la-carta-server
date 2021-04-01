@@ -7,20 +7,28 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '@modules/user/services/user.service';
+import { UserService } from '@modules/user/services/user/user.service';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { CONFIG } from '@config/config-keys';
 import { JwtResponseDto } from '@modules/auth/dto/jwt-response.dto';
 import { randomBytes } from 'crypto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { userCreatedSuccessfully } from '../../../mail/templates/templates';
+import {
+  passwordRecovery,
+  userCreatedSuccessfully,
+} from '../../../mail/templates/templates';
+import { ForgotPasswordDto } from '@modules/user/dto/forgot-password.dto';
+import { UserDocument } from '@modules/user/entities/user.entity';
+import { RecoveryPasswordService } from '@modules/user/services/recovery-password/recovery-password.service';
+import { RecoveryPasswordDocument } from '@modules/user/entities/recovery-password.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private config: ConfigService,
     private userService: UserService,
+    private recoveryPasswordService: RecoveryPasswordService,
     private jwtService: JwtService,
     private mailerService: MailerService,
   ) {}
@@ -81,7 +89,7 @@ export class AuthService {
   }
 
   /**
-   * register new user
+   * Register new user
    * @param user
    */
   async register(user: CreateUserDto) {
@@ -103,7 +111,57 @@ export class AuthService {
         to: user.email,
         from: 'test@applacarta.com',
         subject: 'Registration successfully ✔',
-        html: userCreatedSuccessfully(user), // HTML body content
+        html: userCreatedSuccessfully({
+          email: user.email,
+          password: defaultPassword,
+        }),
+      });
+    } catch (e) {
+      Logger.error(e.message, '', 'Send Mail Error');
+      throw new InternalServerErrorException(
+        'No se pudo enviar el correo al usuario registrado',
+      );
+    }
+
+    await this.userService.create(user);
+
+    return {
+      success: true,
+    };
+  }
+
+  async forgotPassword(user: ForgotPasswordDto) {
+    const record: UserDocument | null = await this.userService.findByEmail(
+      user.email,
+    );
+
+    if (!record) {
+      throw new BadRequestException(
+        'El correo electronico no se encuentra registrado',
+      );
+    }
+
+    // User is registered
+    const minute = 60000;
+    const dueDate = new Date(Date.now() + 1 * minute).toISOString();
+    const hash = randomBytes(32).toString('hex');
+
+    await this.recoveryPasswordService.create({
+      user: record._id,
+      dueDate,
+      hash,
+    });
+
+    try {
+      await this.mailerService.sendMail({
+        to: user.email,
+        from: 'test@applacarta.com',
+        subject:
+          'Solicitud de recuperacion de contraseña para su cuenta de applacarta ✔',
+        html: passwordRecovery({
+          email: user.email,
+          hash,
+        }),
       });
     } catch (e) {
       Logger.error(e.message, '', 'Send Mail Error');
@@ -117,6 +175,22 @@ export class AuthService {
     };
   }
 
+  async recoveryPassword(email, hash) {
+    const record: RecoveryPasswordDocument | null = await this.recoveryPasswordService.findOne(
+      hash,
+    );
+
+    if (!record) {
+      throw new BadRequestException(
+        'El correo electronico no se encuentra registrado',
+      );
+    }
+  }
+
+  /**
+   * Refresh token
+   * @param user
+   */
   async refresh(user: any) {
     const payload = {
       _id: user._id,

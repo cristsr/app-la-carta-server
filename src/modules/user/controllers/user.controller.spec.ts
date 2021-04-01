@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '@modules/user/controllers/user.controller';
-import { UserService } from '@modules/user/services/user.service';
+import { UserService } from '@modules/user/services/user/user.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '@modules/user/entities/user.entity';
 import {
