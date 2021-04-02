@@ -21,7 +21,13 @@ export class Sockets {
   }
 
   logClients() {
-    const clients = Object.keys(this.users);
+    const clients = [...this.users.keys()];
+
+    if (!clients.length) {
+      Logger.log('Not users connected');
+      return;
+    }
+
     Logger.log('Sockets connected');
     console.table(clients);
   }
