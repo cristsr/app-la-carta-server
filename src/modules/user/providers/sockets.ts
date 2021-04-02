@@ -11,7 +11,7 @@ export class Sockets {
 
   getClient(userId: string): any {
     if (!this.users.has(userId)) {
-      throw new WsException('User not found');
+      throw new WsException(`User ${userId} not found`);
     }
     return this.users.get(userId);
   }
