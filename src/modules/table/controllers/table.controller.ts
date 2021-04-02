@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   Req,
-  Logger,
 } from '@nestjs/common';
 import { TableService } from '@modules/table/services/table.service';
 import { CreateTableDto } from '@modules/table/dto/create-table.dto';

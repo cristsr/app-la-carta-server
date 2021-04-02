@@ -177,6 +177,10 @@ export class AuthService {
     };
   }
 
+  /**
+   *
+   * @param data
+   */
   async recoveryPassword(data) {
     const record: RecoveryPasswordDocument | null = await this.recoveryPasswordService.findOne(
       data.recoveryToken,
@@ -189,7 +193,6 @@ export class AuthService {
     }
 
     // return record;
-
     const currentDate = new Date();
     const dueDate = new Date(record.dueDate);
 
@@ -199,9 +202,15 @@ export class AuthService {
       );
     }
 
+    record.user.password = await bcrypt.hash(
+      data.password,
+      +this.config.get(CONFIG.BCRYPT_SALT_OR_ROUNDS),
+    );
+
+    await record.user.save();
+
     return {
-      currentDate,
-      dueDate,
+      success: true,
     };
   }
 
