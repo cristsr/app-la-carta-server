@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateUserDto } from '@modules/user/dto/update-user.dto';
@@ -21,12 +21,13 @@ export class RecoveryPasswordService {
     return this.recoveryPasswordModel.create(recoveryPassword);
   }
 
-  findOne(hash): Promise<RecoveryPasswordDocument> {
+  findOne(recoveryToken): Promise<RecoveryPasswordDocument> {
     return this.recoveryPasswordModel
-      .findOne({ hash })
-      .then((record: RecoveryPasswordDocument) =>
-        record.populate({ path: 'user' }).execPopulate(),
-      );
+      .findOne({ recoveryToken })
+      .then((record: RecoveryPasswordDocument) => {
+        if (!record) throw new NotFoundException('Hash no encontrado');
+        return record.populate({ path: 'user' }).execPopulate();
+      });
   }
 
   update(

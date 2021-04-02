@@ -1,6 +1,6 @@
 export class RecoveryPasswordDto {
   user: string;
   dueDate: string;
-  hash: string;
+  recoveryToken: string;
   isCompleted?: boolean;
 }

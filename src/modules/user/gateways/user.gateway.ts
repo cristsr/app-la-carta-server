@@ -40,7 +40,10 @@ export class UserGateway implements OnGatewayDisconnect {
           data: payload,
         }),
       );
-      Logger.log(`order ${payload.id} sent successfully`, 'UserGateway');
+      Logger.log(
+        `order ${payload.id} sent successfully to user ${userId}`,
+        'UserGateway',
+      );
     } catch (e) {
       Logger.error(e.message, null, 'UserGateway');
     }

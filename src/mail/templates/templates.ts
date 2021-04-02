@@ -24,7 +24,7 @@ export function passwordRecovery(args: any): string {
       <h1>Recuperación de contraseña.</h1>
       <p>El procedimiento para recuperar su contraseña fue inciado. Si no lo hizo usted, ignore este correo electrónico.</p>
       <p>Use este link para cambiar su contraseña</p> 
-      <a href="http://dev.applacarta.com/recovery-password?email=${args.email}&hash=${args.hash}">Cambiar contraseña</a>
+      <a href="http://dev.applacarta.com/recovery-password?recoveryToken=${args.recoveryToken}">Cambiar contraseña</a>
     <div>
   `;
 

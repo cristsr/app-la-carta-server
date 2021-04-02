@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -143,13 +144,14 @@ export class AuthService {
 
     // User is registered
     const minute = 60000;
-    const dueDate = new Date(Date.now() + 1 * minute).toISOString();
-    const hash = randomBytes(32).toString('hex');
+    const currentDate = new Date().getTime();
+    const dueDate = new Date(currentDate + 1 * minute).toISOString();
+    const recoveryToken = randomBytes(32).toString('hex');
 
     await this.recoveryPasswordService.create({
       user: record._id,
       dueDate,
-      hash,
+      recoveryToken,
     });
 
     try {
@@ -160,7 +162,7 @@ export class AuthService {
           'Solicitud de recuperacion de contraseña para su cuenta de applacarta ✔',
         html: passwordRecovery({
           email: user.email,
-          hash,
+          recoveryToken,
         }),
       });
     } catch (e) {
@@ -175,9 +177,9 @@ export class AuthService {
     };
   }
 
-  async recoveryPassword(email, hash) {
+  async recoveryPassword(data) {
     const record: RecoveryPasswordDocument | null = await this.recoveryPasswordService.findOne(
-      hash,
+      data.recoveryToken,
     );
 
     if (!record) {
@@ -185,6 +187,22 @@ export class AuthService {
         'El correo electronico no se encuentra registrado',
       );
     }
+
+    // return record;
+
+    const currentDate = new Date();
+    const dueDate = new Date(record.dueDate);
+
+    if (currentDate > dueDate) {
+      throw new UnprocessableEntityException(
+        'El token de recuperacion ha caducado',
+      );
+    }
+
+    return {
+      currentDate,
+      dueDate,
+    };
   }
 
   /**

@@ -6,6 +6,7 @@ import {
   Request,
   Body,
   Logger,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '@modules/auth/services/auth.service';
@@ -34,6 +35,12 @@ export class AuthController {
   @Post('forgot-password')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.authService.forgotPassword(forgotPasswordDto);
+  }
+
+  @Public()
+  @Post('recovery-password')
+  async recoveryPassword(@Body() data: any) {
+    return this.authService.recoveryPassword(data);
   }
 
   @Get('profile')

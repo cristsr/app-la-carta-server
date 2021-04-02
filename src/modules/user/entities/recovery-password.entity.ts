@@ -11,7 +11,7 @@ export class RecoveryPassword {
     type: MongooseSchema.Types.ObjectId,
     ref: User.name,
   })
-  user: string;
+  user: any;
 
   @Prop()
   dueDate: string;
