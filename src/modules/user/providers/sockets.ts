@@ -20,6 +20,9 @@ export class Sockets {
   }
 
   disconnect(userId): void {
+    if (!userId) {
+      return;
+    }
     this.users.delete(userId);
   }
 
