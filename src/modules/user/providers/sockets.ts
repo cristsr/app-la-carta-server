@@ -21,7 +21,7 @@ export class Sockets {
   }
 
   logClients() {
-    const clients = Object.values(this.users);
+    const clients = Object.keys(this.users);
     Logger.log('Sockets connected');
     console.table(clients);
   }
