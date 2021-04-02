@@ -10,7 +10,7 @@ export class Sockets {
   }
 
   getClient(userId: string): any {
-    Logger.log(this.users.has(userId), `Exist user ${userId}`);
+    Logger.log(`${this.users.has(userId)} Exist user ${userId}`);
 
     if (!this.users.has(userId)) {
       throw new WsException(`User ${userId} not found`);
