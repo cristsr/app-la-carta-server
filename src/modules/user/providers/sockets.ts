@@ -3,31 +3,32 @@ import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class Sockets {
-  private users = new Map<string, any>();
+  private users = {};
 
-  register(userId: string, client): void {
-    this.users.set(userId, client);
+  register(userId: string, client: any): void {
+    this.users[userId] = client;
   }
 
   getClient(userId: string): any {
-    Logger.log(`${this.users.has(userId)} Exist user ${userId}`);
+    this.logClients();
 
-    if (!this.users.has(userId)) {
+    if (!this.users[userId]) {
       throw new WsException(`User ${userId} not found`);
     }
 
-    return this.users.get(userId);
+    return this.users[userId];
   }
 
   disconnect(userId): void {
     if (!userId) {
       return;
     }
-    this.users.delete(userId);
+
+    delete this.users[userId];
   }
 
   logClients() {
-    const clients = [...this.users.keys()];
+    const clients = Object.keys(this.users);
 
     if (!clients.length) {
       Logger.log('Not users connected');

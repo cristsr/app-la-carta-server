@@ -6,7 +6,6 @@ import {
   Request,
   Body,
   Logger,
-  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '@modules/auth/services/auth.service';
