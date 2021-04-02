@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
 @Injectable()
@@ -18,5 +18,11 @@ export class Sockets {
 
   disconnect(userId): void {
     this.users.delete(userId);
+  }
+
+  logClients() {
+    const clients = Object.values(this.users);
+    Logger.log('Sockets connected');
+    console.table(clients);
   }
 }

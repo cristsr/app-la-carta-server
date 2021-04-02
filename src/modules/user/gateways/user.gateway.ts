@@ -1,6 +1,7 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
@@ -22,6 +23,7 @@ export class UserGateway implements OnGatewayDisconnect {
   handleDisconnect(clientRef: any): any {
     this.sockets.disconnect(clientRef.id);
     Logger.log(`Client ${clientRef.id} Disconnected`, 'OrdersGateway');
+    this.sockets.logClients();
   }
 
   @SubscribeMessage('join')
@@ -29,6 +31,7 @@ export class UserGateway implements OnGatewayDisconnect {
     clientRef.id = userId;
     this.sockets.register(userId, clientRef);
     Logger.log(`User ${userId} is connected`, 'UserGateway');
+    this.sockets.logClients();
   }
 
   @OnEvent('order.created', { async: true })
