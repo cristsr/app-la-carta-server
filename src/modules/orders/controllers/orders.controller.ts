@@ -8,12 +8,12 @@ import {
   Delete,
   Request,
   Query,
-  BadRequestException,
 } from '@nestjs/common';
 import { Public } from '@modules/auth/decorators/public';
 import { OrdersService } from '@modules/orders/services/orders/orders.service';
 import { CreateOrderDto } from '@modules/orders/dto/create-order.dto';
 import { UpdateOrderDto } from '@modules/orders/dto/update-order.dto';
+import { FindOrderParams } from '@modules/orders/dto/find-order.params';
 
 @Controller('orders')
 export class OrdersController {
@@ -26,16 +26,7 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(
-    @Request() req,
-    @Query('isCompleted') isCompleted: boolean | undefined,
-  ) {
-    if (typeof isCompleted === 'undefined') {
-      throw new BadRequestException(
-        'El parametro de busqueda isCompleted es requerido.',
-      );
-    }
-
+  findAll(@Request() req, @Query() { isCompleted }: FindOrderParams) {
     return this.ordersService.findAll(req.user._id, isCompleted);
   }
 

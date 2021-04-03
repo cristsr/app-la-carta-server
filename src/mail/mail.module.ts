@@ -2,9 +2,6 @@ import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { CONFIG } from '@config/config-keys';
-import { join } from 'path';
-
-console.log(join(__dirname, 'templates'));
 
 @Module({
   imports: [

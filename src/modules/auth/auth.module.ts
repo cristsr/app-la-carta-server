@@ -30,7 +30,7 @@ import { RestJwtAuthGuard } from '@modules/auth/guards/rest-jwt-auth.guard';
     LocalStrategy,
     JwtStrategy,
     {
-      //by default each controller uses this guard
+      // by default each controller uses this guard
       provide: APP_GUARD,
       useClass: RestJwtAuthGuard,
     },

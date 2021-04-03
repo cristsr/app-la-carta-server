@@ -19,20 +19,30 @@ export class UserGateway implements OnGatewayDisconnect {
 
   constructor(private sockets: Sockets) {}
 
+  /**
+   * Remove a socket from pool when it is disconnected
+   * @param clientRef
+   */
   handleDisconnect(clientRef: any): any {
     this.sockets.disconnect(clientRef.id);
-    Logger.log(`Client ${clientRef.id} Disconnected`, 'OrdersGateway');
-    this.sockets.logClients();
   }
 
+  /**
+   * Register new user to pool of sockets
+   * @param userId
+   * @param clientRef
+   */
   @SubscribeMessage('join')
   handleJoin(@MessageBody() userId: string, @ConnectedSocket() clientRef) {
-    clientRef.id = userId;
     this.sockets.register(userId, clientRef);
-    Logger.log(`User ${userId} is connected`, 'UserGateway');
-    this.sockets.logClients();
   }
 
+  /**
+   * Called when a new order is created
+   * this method search a socket by userId and notifies the order created
+   * @param payload
+   * @param userId
+   */
   @OnEvent('order.created', { async: true })
   handleOrderCreatedEvent(payload: ResponseOrderDto, userId: string) {
     try {
@@ -47,7 +57,7 @@ export class UserGateway implements OnGatewayDisconnect {
         'UserGateway',
       );
     } catch (e) {
-      Logger.error(e.message, null, 'UserGateway');
+      Logger.log(e.message, 'UserGateway');
     }
   }
 }

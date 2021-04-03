@@ -10,19 +10,19 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '@modules/user/services/user/user.service';
 import { CreateUserDto } from '@modules/user/dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
 import { CONFIG } from '@config/config-keys';
 import { JwtResponseDto } from '@modules/auth/dto/jwt-response.dto';
 import { randomBytes } from 'crypto';
 import { MailerService } from '@nestjs-modules/mailer';
-import {
-  passwordRecovery,
-  userCreatedSuccessfully,
-} from '../../../mail/templates/templates';
 import { ForgotPasswordDto } from '@modules/user/dto/forgot-password.dto';
 import { UserDocument } from '@modules/user/entities/user.entity';
 import { RecoveryPasswordService } from '@modules/user/services/recovery-password/recovery-password.service';
 import { RecoveryPasswordDocument } from '@modules/user/entities/recovery-password.entity';
+import {
+  passwordRecovery,
+  userCreatedSuccessfully,
+} from '@mail/templates/templates';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -131,6 +131,10 @@ export class AuthService {
     };
   }
 
+  /**
+   * Search user by email and send a email with a token to recovery account
+   * @param user
+   */
   async forgotPassword(user: ForgotPasswordDto) {
     const record: UserDocument | null = await this.userService.findByEmail(
       user.email,
@@ -178,18 +182,18 @@ export class AuthService {
   }
 
   /**
-   *
-   * @param data
+   * Search a recovery account record by token given previously via email
+   * and set the new password to user;
+   * @param recoveryToken
+   * @param password
    */
-  async recoveryPassword(data) {
+  async recoveryPassword(recoveryToken: string, password: string) {
     const record: RecoveryPasswordDocument | null = await this.recoveryPasswordService.findOne(
-      data.recoveryToken,
+      recoveryToken,
     );
 
     if (!record) {
-      throw new BadRequestException(
-        'El correo electronico no se encuentra registrado',
-      );
+      throw new BadRequestException('Token de recuperacion invalido o nulo');
     }
 
     // return record;
@@ -203,7 +207,7 @@ export class AuthService {
     }
 
     record.user.password = await bcrypt.hash(
-      data.password,
+      password,
       +this.config.get(CONFIG.BCRYPT_SALT_OR_ROUNDS),
     );
 

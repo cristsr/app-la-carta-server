@@ -18,7 +18,10 @@ export class TableController {
 
   @Post()
   create(@Req() req, @Body() body) {
-    const createTableDto: CreateTableDto = { ...body, userId: req.user._id };
+    const createTableDto: CreateTableDto = {
+      ...body,
+      userId: req.user._id,
+    };
     return this.tablesService.create(createTableDto);
   }
 

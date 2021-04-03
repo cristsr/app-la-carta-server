@@ -53,7 +53,7 @@ export class OrdersService {
     return orderResponse;
   }
 
-  findAll(userId: string, isCompleted: boolean) {
+  findAll(userId: string, isCompleted: any) {
     return this.orderModel.find({
       userId,
       isCompleted,

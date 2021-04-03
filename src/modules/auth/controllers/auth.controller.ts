@@ -5,7 +5,6 @@ import {
   UseGuards,
   Request,
   Body,
-  Logger,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '@modules/auth/services/auth.service';
@@ -38,13 +37,12 @@ export class AuthController {
 
   @Public()
   @Post('recovery-password')
-  async recoveryPassword(@Body() data: any) {
-    return this.authService.recoveryPassword(data);
+  async recoveryPassword(@Body() { recoveryToken, password }) {
+    return this.authService.recoveryPassword(recoveryToken, password);
   }
 
   @Get('profile')
   getProfile(@Request() req) {
-    Logger.debug(req.user);
     return req.user;
   }
 

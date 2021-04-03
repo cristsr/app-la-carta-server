@@ -16,7 +16,8 @@
       "@modules/*": ["src/modules/*"],
       "@database/*": ["src/database/*"],
       "@config/*": ["src/config/*"],
-      "assets/*": ["src/assets/*"]
+      "assets/*": ["src/assets/*"],
+      "@mail/*": ["src/mail/*"]
     }
   }
 }
