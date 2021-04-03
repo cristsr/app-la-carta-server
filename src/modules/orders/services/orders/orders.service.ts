@@ -40,7 +40,7 @@ export class OrdersService {
       });
 
     const orderResponse: ResponseOrderDto = {
-      id: orderRecord.id,
+      _id: orderRecord.id,
       table: orderRecord.tableId.name,
       order: orderRecord.order,
       isCompleted: orderRecord.isCompleted,

@@ -1,5 +1,5 @@
 export class ResponseOrderDto {
-  id: string;
+  _id: string;
   table: string;
   order: {
     name: string;
