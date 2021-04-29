@@ -53,12 +53,22 @@ export class OrdersService {
     return orderResponse;
   }
 
-  findAll(userId: string, isCompleted: any) {
-    return this.orderModel.find({
-      userId,
-      isCompleted,
-      isDeleted: false,
-    });
+  async findAll(userId: string, isCompleted: any) {
+    const results = await this.orderModel
+      .find({
+        userId,
+        isCompleted,
+        isDeleted: false,
+      })
+      .populate('tableId');
+
+    return results.map((result: any) => ({
+      _id: result.id,
+      table: result.tableId.name,
+      order: result.order,
+      isCompleted: result.isCompleted,
+      totalPrice: result.totalPrice,
+    }));
   }
 
   update(id: string, updateOrderDto: UpdateOrderDto) {
