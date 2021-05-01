@@ -62,6 +62,10 @@ export class OrdersService {
       })
       .populate('tableId');
 
+    if (!results) {
+      return [];
+    }
+
     return results.map((result: any) => ({
       _id: result.id,
       table: result.tableId.name,
