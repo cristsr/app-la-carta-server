@@ -18,10 +18,7 @@ import { ForgotPasswordDto } from '@modules/user/dto/forgot-password.dto';
 import { UserDocument } from '@modules/user/entities/user.entity';
 import { RecoveryPasswordService } from '@modules/user/services/recovery-password/recovery-password.service';
 import { RecoveryPasswordDocument } from '@modules/user/entities/recovery-password.entity';
-import {
-  passwordRecovery,
-  userCreatedSuccessfully,
-} from '@mail/templates/templates';
+import { passwordRecovery } from '@mail/templates/templates';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -100,29 +97,10 @@ export class AuthService {
       );
     }
 
-    const defaultPassword = randomBytes(6).toString('hex');
-
     user.password = await bcrypt.hash(
-      defaultPassword,
+      user.password,
       +this.config.get(CONFIG.BCRYPT_SALT_OR_ROUNDS),
     );
-
-    try {
-      await this.mailerService.sendMail({
-        to: user.email,
-        from: 'test@applacarta.com',
-        subject: 'Registration successfully ✔',
-        html: userCreatedSuccessfully({
-          email: user.email,
-          password: defaultPassword,
-        }),
-      });
-    } catch (e) {
-      Logger.error(e.message, '', 'Send Mail Error');
-      throw new InternalServerErrorException(
-        'No se pudo enviar el correo al usuario registrado',
-      );
-    }
 
     await this.userService.create(user);
 
